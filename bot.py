@@ -1,4 +1,5 @@
 import requests
+import time
 from config import auth
 
 # MercadoTest
@@ -39,18 +40,57 @@ cantidad = primera_punta[1]
 print("Precio:", precio)
 print("Cantidad:", cantidad)
 
-
 limit = responseOrders.json()['orders'][0]['limit'][0]
 
-# Calcular la diferencia entre "limit" y "precio"
-diferencia = float(limit) - float(precio)
-
 # Calcular el porcentaje de diferencia entre "limit" y "precio"
-porcentaje_diferencia = (diferencia / float(precio)) * 100
+price_dif = ((float(limit) - float(precio)) / float(precio)) * 100
 
+# nuevo precio
+new_price = float(precio) * (1 - 0.1)
+
+# check precio
+if price_dif < -10:
+    order_id = responseOrders.json()['orders'][0]['id']
+    url_cancel = f'https://www.buda.com/api/v2/orders/{order_id}'
+    response_cancel = requests.put(url_cancel, auth=auth, json={
+        'state': 'canceling',
+    })
+    print(response_cancel.json())
+
+    new_price = float(precio) * (1 - 0.1)
+
+    url_balance = f'https://www.buda.com/api/v2/balances'
+    response_balance = requests.get(url_balance, auth=auth)
+    print(response_balance.json())
+
+    #new_amount = float(response_balance.json()['balances']['amount'][0])
+
+    # Iterate over the "balances" array to find the desired object
+    time.sleep(1)
+    for balance in response_balance.json()['balances']:
+        if balance['id'] == 'ARS':
+            balanceARS = float(balance['available_amount'][0])
+            new_amount = (balanceARS-1)/new_price
+            print(balanceARS)
+            print(new_amount)
+            break
+
+    time.sleep(1)
+    url_newOrder = f'https://www.buda.com/api/v2/markets/{market_id}/orders'
+    response_newOrder = requests.post(url_newOrder, auth=auth, json={
+        'type': 'Bid',
+        'price_type': 'limit',
+        'limit': new_price,
+        'amount': new_amount,
+    })
+    print(response_newOrder.json())
+
+
+####### TEST#########
 # Imprimir el resultado
+print(new_price)
 print(
-    f"El valor de 'limit' es {porcentaje_diferencia:.2f}% diferente del precio de punta.")
+    f"El valor de 'limit' es {price_dif:.2f}% diferente del precio de punta.")
 
 if float(limit) > float(precio):
     print("El valor de 'limit' es mayor que el precio de punta.")
