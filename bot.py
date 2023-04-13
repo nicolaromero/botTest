@@ -5,7 +5,6 @@ from config import auth
 i = 0  # Inicializar la variable que cuenta las ejecuciones
 
 while True:
-    # Inserta aquí el código que deseas ejecutar repetitivamente
     # MercadoTest
     market_id = 'btc-ars'
 
@@ -48,7 +47,7 @@ while True:
         print("Orden cancelada < -10%: ")
         print(response_cancel.json())
 
-        # Calcularnuevo precio
+        # Calcular nuevo precio
         new_price = float(precio) * (1 - 0.094)
 
         url_balance = f'https://www.buda.com/api/v2/balances'
@@ -58,7 +57,7 @@ while True:
 
         #new_amount = float(response_balance.json()['balances']['amount'][0])
 
-        # Iterate over the "balances" array to find the desired object
+        # Iterate over "balances" array to find the desired object
         time.sleep(1)
         for balance in response_balance.json()['balances']:
             if balance['id'] == 'ARS':
@@ -83,9 +82,9 @@ while True:
     i += 1
 
     # Verificar si se ha alcanzado el número máximo de ejecuciones
-    if i >= 10:  # Reemplaza 10 con el número máximo de ejecuciones que deseas
+    if i >= 180:
         print(f"END - Ejecución {i}")
         break
 
-    # Agrega un retraso de 1 minuto antes de la siguiente ejecución
-    time.sleep(10)
+    # Agrega un retraso en segundos antes de la siguiente ejecución
+    time.sleep(300)
