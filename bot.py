@@ -1,5 +1,6 @@
 import time
 import requests
+from datetime import datetime
 from config import auth
 
 i = 0  # Inicializar la variable que cuenta las ejecuciones
@@ -7,6 +8,8 @@ i = 0  # Inicializar la variable que cuenta las ejecuciones
 while True:
     # MercadoTest
     market_id = 'btc-ars'
+    now = datetime.now()
+    date = now.strftime("%d/%m/%Y %H:%M:%S")
 
     # Obtener mis ordenes
     urlOrders = f'https://www.buda.com/api/v2/markets/{market_id}/orders'
@@ -15,7 +18,7 @@ while True:
         'per': 20,
         'page': 1,
     })
-    print("Init - MyOrders")
+    print(f"Init {i} - {date}")
     print(responseOrders.json())
 
     # Obtener precio de punta en el libro
