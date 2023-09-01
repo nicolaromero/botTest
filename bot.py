@@ -7,7 +7,7 @@ i = 0  # Inicializar la variable que cuenta las ejecuciones
 
 while True:
     # MercadoTest
-    market_id = 'btc-ars'
+    market_id = 'btc-clp'
     now = datetime.now()
     date = now.strftime("%d/%m/%Y %H:%M:%S")
 
@@ -63,10 +63,10 @@ while True:
         # Iterate over "balances" array to find the desired object
         time.sleep(1)
         for balance in response_balance.json()['balances']:
-            if balance['id'] == 'ARS':
-                balanceARS = float(balance['available_amount'][0])
-                new_amount = (balanceARS-1)/new_price
-                print("Balance: ", balanceARS)
+            if balance['id'] == 'CLP':
+                balanceCLP = float(balance['available_amount'][0])
+                new_amount = (balanceCLP-1)/new_price
+                print("Balance: ", balanceCLP)
                 print("Nuevo monto: ", new_amount)
                 break
 
