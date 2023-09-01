@@ -3,7 +3,7 @@ import time
 from config import auth
 
 # MercadoTest
-market_id = 'btc-ars'
+market_id = 'btc-clp'
 
 # Obtener mis ordenes
 urlOrders = f'https://www.buda.com/api/v2/markets/{market_id}/orders'
@@ -52,14 +52,17 @@ if price_dif < -10:
 
     #new_amount = float(response_balance.json()['balances']['amount'][0])
 
+    new_amount = 0.0
+    
     # Iterate over the "balances" array to find the desired object
     time.sleep(1)
+    desired_currency = 'CLP'
     for balance in response_balance.json()['balances']:
-        if balance['id'] == 'ARS':
-            balanceARS = float(balance['available_amount'][0])
-            new_amount = (balanceARS-1)/new_price
-            print(balanceARS)
-            print(new_amount)
+        if balance['id'] == desired_currency:
+            balanceCLP = float(balance['available_amount'][0])
+            new_amount = (balanceCLP - 1) / new_price
+            print("Balance CLP:", balanceCLP)
+            print("Nuevo monto:", new_amount)
             break
 
     time.sleep(1)
@@ -70,7 +73,7 @@ if price_dif < -10:
         'limit': new_price,
         'amount': new_amount,
     })
-    print(response_newOrder.json())
+    print("Esta es la nueva orden", response_newOrder.json())
 
 
 ####### TEST#########
